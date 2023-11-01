@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: [true, 'email already exist'],
         required: [true, 'email is required'],
+        trim: true,
         validate: {
             validator: function (email) {
                 const isEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
@@ -59,22 +60,20 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    updatedAt: {
+    lastUpdated: {
         type: Date,
     },
 });
 
-// // enable virtual to use _id as id in other apps connected to this schema
-// userSchema.virtual('id').get(function () {
-//     return this._id.toHexString();
-// });
+// enable virtual to use _id as id in other apps connected to this schema
+userSchema.virtual('id').get(function () {
+    return this._id.toHexString();
+});
 
-// userSchema.set('toJSON', {
-//     virtuals: true, // enable virtual to frontend as json. display id
-// });
-userSchema.methods.verifyPassword = async (password) => {
-    return bcrypt.compareSync(password, this.password);
-};
+userSchema.set('toJSON', {
+    virtuals: true, // enable virtual.
+});
+
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

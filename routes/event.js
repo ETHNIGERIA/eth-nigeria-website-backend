@@ -16,7 +16,7 @@ router.post('/add', authenticateToken, isAdmin, async (req, res) => {
             location,
             status
         });
-        if(!newEvent){
+        if(!newEvent) {
             return res.status(500).json({success: false, err: 'Event creation failed'});
         }
         const event = await newEvent.save();

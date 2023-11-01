@@ -9,7 +9,7 @@ const router = express.Router();
 // onboard a new user
 router.post('/signup', async (req, res) => {
     try {
-      const { firstName, lastName, email, password, city, state } = req.body;
+      const { firstName, lastName, email, phone, password, city, state } = req.body;
   
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -22,6 +22,7 @@ router.post('/signup', async (req, res) => {
         firstName,
         lastName,
         email,
+        phone,
         password: hashedPassword,
         city,
         state,
@@ -40,9 +41,10 @@ router.post('/signup', async (req, res) => {
 
 
 // get all user
-router.get('/users', authenticateToken, async (req, res) => {
+router.get('/users', async (req, res) => {
     try {
-        const users = await User.find().select(['firstName', 'lastName','email', '-password', 'city', 'state']);
+        const users = await User.find().select(['-password']); // 'firstName', 'lastName','email',  'city', 'state'
+        console.log(users)
         if(!users){
             return res.status(404).send('no user found');
         }
@@ -53,7 +55,7 @@ router.get('/users', authenticateToken, async (req, res) => {
 });
 
 // get count of users
-router.get('/total', authenticateToken, async (req, res) => {
+router.get('/total',  async (req, res) => {
     try {
         const usersCount = await User.countDocuments();
         if (!usersCount){
@@ -66,7 +68,7 @@ router.get('/total', authenticateToken, async (req, res) => {
 });
 
 //get user by id
-router.get('/:id', authenticateToken, async (req, res) => {
+router.get('/:id',  async (req, res) => {
     try {
         const ID = mongoose.isValidObjectId(req.params.id);
         if(!ID) {
@@ -83,7 +85,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 });
 
 // update user profile
-router.patch('/update/:id', authenticateToken, async (req, res) => {
+router.patch('/update/:id',  async (req, res) => {
     const id = mongoose.isValidObjectId(req.params.id);
     if(!id){
         return res.status(400).send('Invalid user id');
@@ -97,7 +99,7 @@ router.patch('/update/:id', authenticateToken, async (req, res) => {
                 avatar: req.body.avatar,
                 city: req.body.city,
                 state: req.body.state,
-                modifiedAt: new Date()
+                lastUpdated: new Date()
             },
             {new : true},
         ).select('-password');
@@ -112,7 +114,7 @@ router.patch('/update/:id', authenticateToken, async (req, res) => {
 });
 
 // remove a user
-router.delete('/rm/:userId', authenticateToken, async (req, res) => {
+router.delete('/rm/:userId',  async (req, res) => {
     try {
       const userId = req.params.userId;
       const user = await User.findById(userId);
