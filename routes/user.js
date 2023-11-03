@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const { authenticateToken } = require('../middleware/auth');
+const { authenticateToken, isAdmin } = require('../middleware/auth');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
@@ -114,7 +114,7 @@ router.patch('/update/:id',  async (req, res) => {
 });
 
 // remove a user
-router.delete('/rm/:userId',  async (req, res) => {
+router.delete('/rm/:userId', isAdmin, async (req, res) => {
     try {
       const userId = req.params.userId;
       const user = await User.findById(userId);

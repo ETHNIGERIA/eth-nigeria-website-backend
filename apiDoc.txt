@@ -1,0 +1,34 @@
+This is the documentation for the APIs
+
+
+# Users
+--- signup: api/v1/user/signup 
+    req.body: firstName, lastName, email, phone, password, city, state
+--- login: api/v1/auth/login
+    req.body: email, password
+--- get all users: api/v1/user/users 
+--- get particular user: api/v1/user/:id
+    req.params: user ID
+--- get total number of registered users: api/v1/user/total
+--- update a user profile: api/v1/user/update/:id
+    req.body: displayName, avatar, city, state.
+    here, the name and email cannot be updated after registeration
+--- remove a user: api/v1/user/rm/:userId
+    here only admin can remove a user
+--- logout: api/v1/user/logout
+    destroys a user login session and redirects to the login page
+--- set role: api/v1/auth/set-role
+    req.body: email, role.. here only the admin can assign an email a role (state coordinator etc)
+
+
+# Events
+
+--- create event: api/v1/event/add
+    req.body: title, description, location, status, reg_link
+--- get all events: api/v1/event/events
+--- get particular event: api/v1/event/:id
+    req.params: event ID
+--- update event: api/v1/event/update/:id
+--- delete an event: api/v1/event/rm/:id
+only admin can update/delete an event
+

@@ -8,13 +8,14 @@ const router = express.Router();
 // create new event
 router.post('/add', authenticateToken, isAdmin, async (req, res) => {
     try {
-        const { title, description, location, status } = req.body;
+        const { title, description, location, status, reg_link } = req.body;
 
         const newEvent = new Event({
             title,
             description,
             location,
-            status
+            status,
+            reg_link
         });
         if(!newEvent) {
             return res.status(500).json({success: false, err: 'Event creation failed'});
@@ -30,7 +31,7 @@ router.post('/add', authenticateToken, isAdmin, async (req, res) => {
 // get all events
 router.get('/events', authenticateToken, async (req, res) => {
     try {
-        const events = await Event.find().select(['title', 'description','location', 'status']);
+        const events = await Event.find().select(['title', 'description','location', 'status', 'reg_link']);
         if(!events){
             return res.status(404).send('no events found');
         }
@@ -71,6 +72,7 @@ router.patch('/update/:id', authenticateToken, isAdmin, async (req, res) => {
                 description: req.body.description,
                 location: req.body.location,
                 status: req.body.status,
+                reg_link: req.body.reg_link,
                 modifiedAt: new Date()
             },
             {new : true},

@@ -1,11 +1,12 @@
 const express = require('express');
 const { login, setRole } = require('../controller/auth');
+const { isAdmin } = require('../middleware/auth');
 const router = express.Router();
 
 
 router.post('/login', login);
 
-router.post('/set-role', async (req, res) => {
+router.post('/set-role', isAdmin, async (req, res) => {
     try {
         const {email, role} = req.body;
         const newRole = setRole(email, role);

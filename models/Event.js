@@ -26,6 +26,10 @@ const eventSchema = new mongoose.Schema({
         enum: ['UPCOMING', 'ONGOING', 'ENDED'],
         default: 'UPCOMING',
     },
+    reg_link: {
+        type: String,
+        required: true,
+    },
     modifiedAt: {
         type: Date,
     },
